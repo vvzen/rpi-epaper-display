@@ -1,8 +1,7 @@
 import os
 import time
-if not os.getenv("DEBUG"):
-    import spidev
-    import RPi.GPIO as GPIO
+import spidev
+import RPi.GPIO as GPIO
 
 """ BCM GPIO """
 RST = 17

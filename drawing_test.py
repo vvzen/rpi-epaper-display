@@ -4,7 +4,13 @@ import Image, ImageDraw, ImageFont  # PIL - PythonImageLibrary
 import time, datetime, sys, signal, urllib, requests, random, os
 from StringIO import StringIO
 from markov.markovchain import Markov # simple class for generating markov sentences
-DEBUG = os.getenv("DEBUG")
+DEBUG = int(os.getenv("DEBUG"))
+
+if DEBUG:
+	print "DEBUG mode"
+else:
+	print "PRODUCTION Mode"
+
 if not DEBUG:
     import spidev as SPI # serial peripheral interface bus, where the display connects
     from EPD_driver import EPD_driver
@@ -59,13 +65,14 @@ if not DEBUG:
     print '------------init and Clear full screen------------'
     disp.Dis_Clear_full()
     disp.delay()
+    print "display cleared and ready!"
 
     # display part
     disp.EPD_init_Part()
     disp.delay()
 
 # fonts for drawing within PIL
-andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 15)
+andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
 andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 26)
 
 # main_img is used as screen buffer, all image composing/drawing is done in PIL,
@@ -82,9 +89,12 @@ sentence = markov.generate(4)
 sentence = sentence.replace("’", "'").replace("\n", " ").replace("”", "")
 
 # format sentence so that it fits into the display
-padding = (DISPLAY_WIDTH - float(andale_ttf_small.getsize(sentence)[0])) / 2
+padding_x = (DISPLAY_WIDTH - float(andale_ttf_small.getsize(sentence)[0])) / 2
+padding_y = (DISPLAY_HEIGHT - float(andale_ttf_small.getsize(sentence)[1])) / 2
+
+print "---> {}".format(sentence)
+
 if DEBUG:
-    print "---> {}".format(sentence)
     print "length of sentence: {}".format(len(sentence))
     print "pixel size of sentence: {}".format(andale_ttf_small.getsize(sentence))
     print "display width - sentence size: {}".format(padding)
@@ -94,12 +104,12 @@ def main():
 
     while True:
         starttime = time.time()
-
-        # 
-        pos_x = padding
-        pos_y = 44
+ 
+        pos_x = padding_x
+        pos_y = padding_y
         text = sentence
-        draw.text((pos_x, pos_y), sentence, fill=255, font=andale_ttf_small)
+	draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill="white")
+        draw.text((pos_x, pos_y), sentence, fill=0, font=andale_ttf_small)
         # draw.text((tpx, tpy), text, fill=255, font=andale_ttf_small)
 
         if DEBUG:
@@ -108,7 +118,18 @@ def main():
         else:
             image_to_display(main_img)
 
-        time.sleep(0.3)
+	try:
+	    user_input = raw_input("press n to generate another sentence\n")
+	    if user_input == "n":
+		continue
+	    elif user_input == "q":
+		break
+	    else:
+		print "say that again!"
+	except ValueError:
+	    print "say that again"
+
+        time.sleep(0.5)
 
 if __name__ == "__main__":
     main()
