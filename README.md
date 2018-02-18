@@ -29,6 +29,6 @@ The pinout used is this:
 	Setting DEBUG to 1 avoids loading modules that you don't have on your local machine and will also create an output image (drawing_test.png) instead of rendering the images on the epaper display. This could be useful to do most of the programming on your machine before sending the code to the raspberry pi.
 	
 	When you will be working on your raspberry pi you'll need to install these modules:
-    `sudo apt-get install python-requests python-pil python-rpi.gpio`
+    `sudo apt-get install python-pil python-rpi.gpio`
 
 2. SPI must be enabled on the Raspberry-Pi: in /boot/config.txt look for "dtparam=spi=on"
