@@ -93,14 +93,13 @@ def generate_sentence(font):
     padding_x = (DISPLAY_WIDTH - float(font.getsize(g_sentence)[0])) / 2
     padding_y = (DISPLAY_HEIGHT - float(font.getsize(g_sentence)[1])) / 2
 
-    return padding_x, padding_y, g_sentence
+    print "----> {}".format(g_sentence)
 
-print "---> {}".format(sentence)
+    if DEBUG:
+        print "length of sentence: {}".format(len(g_sentence))
+    	print "pixel size of sentence: {}".format(andale_ttf_small.getsize(g_sentence))
 
-if DEBUG:
-    print "length of sentence: {}".format(len(sentence))
-    print "pixel size of sentence: {}".format(andale_ttf_small.getsize(sentence))
-    print "display width - sentence size: {}".format(padding)
+    return g_sentence, padding_x, padding_y
 
 # our entry point
 def main():
@@ -110,18 +109,17 @@ def main():
  
         text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
 
-	    draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill=255)
+	draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill="white")
         draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
         # draw.text((tpx, tpy), text, fill=255, font=andale_ttf_small)
 
         if DEBUG:
             main_img.save("drawing_test.png")
-            break
         else:
             image_to_display(main_img)
 
         try:
-            user_input = raw_input("press n to generate another sentence\n")
+            user_input = raw_input("press n to generate another sentence, q to quit\n")
             if user_input == "n":
                 continue
             elif user_input == "q":
