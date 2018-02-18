@@ -1,3 +1,4 @@
 *.pyc
-paper-display-venv
+debug
 *.DS_Store
+paper-display-venv
