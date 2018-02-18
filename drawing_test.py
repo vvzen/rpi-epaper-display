@@ -80,17 +80,20 @@ andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf",
 main_img = Image.new("1", (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 draw = ImageDraw.Draw(main_img)
 
-# generate sentence
-markov = Markov(order=2)
-markov.train(os.path.join(current_dir, "source", "data", "motivational.txt"))
-sentence = markov.generate(4)
+def generate_sentence(font):
+    # generate sentence
+    markov = Markov(order=2)
+    markov.train(os.path.join(current_dir, "source", "data", "motivational.txt"))
+    g_sentence = markov.generate(4)
 
-# remove all special symbols
-sentence = sentence.replace("’", "'").replace("\n", " ").replace("”", "")
+    # remove all special symbols
+    g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "")
 
-# format sentence so that it fits into the display
-padding_x = (DISPLAY_WIDTH - float(andale_ttf_small.getsize(sentence)[0])) / 2
-padding_y = (DISPLAY_HEIGHT - float(andale_ttf_small.getsize(sentence)[1])) / 2
+    # calculates padding so that it fits nicely in the display
+    padding_x = (DISPLAY_WIDTH - float(font.getsize(g_sentence)[0])) / 2
+    padding_y = (DISPLAY_HEIGHT - float(font.getsize(g_sentence)[1])) / 2
+
+    return padding_x, padding_y, g_sentence
 
 print "---> {}".format(sentence)
 
@@ -105,11 +108,10 @@ def main():
     while True:
         starttime = time.time()
  
-        pos_x = padding_x
-        pos_y = padding_y
-        text = sentence
-	draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill="white")
-        draw.text((pos_x, pos_y), sentence, fill=0, font=andale_ttf_small)
+        text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
+
+	    draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill=255)
+        draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
         # draw.text((tpx, tpy), text, fill=255, font=andale_ttf_small)
 
         if DEBUG:
@@ -118,16 +120,16 @@ def main():
         else:
             image_to_display(main_img)
 
-	try:
-	    user_input = raw_input("press n to generate another sentence\n")
-	    if user_input == "n":
-		continue
-	    elif user_input == "q":
-		break
-	    else:
-		print "say that again!"
-	except ValueError:
-	    print "say that again"
+        try:
+            user_input = raw_input("press n to generate another sentence\n")
+            if user_input == "n":
+                continue
+            elif user_input == "q":
+                break
+            else:
+                print "say that again!"
+        except ValueError:
+            print "say that again"
 
         time.sleep(0.5)
 
