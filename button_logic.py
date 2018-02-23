@@ -15,9 +15,9 @@ def setup_gpio(cs_btn, tr_btn, y_led, b_led, g_led):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(cs_btn, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(tr_btn, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.setup(y, GPIO.OUT)
-    GPIO.setup(b, GPIO.OUT)
-    GPIO.setup(g, GPIO.OUT)
+    GPIO.setup(y_led, GPIO.OUT)
+    GPIO.setup(b_led, GPIO.OUT)
+    GPIO.setup(g_led, GPIO.OUT)
 
     GPIO.output(y_led, False)
     GPIO.output(g_led, False)

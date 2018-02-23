@@ -1,11 +1,16 @@
 #!/usr/bin/python
 #*- coding: utf-8 *-
+import RPi.GPIO as GPIO
 import Image, ImageDraw, ImageFont  # PIL - PythonImageLibrary
 import time, datetime, sys, signal, urllib, requests, random, os
 from StringIO import StringIO
 from markov.markovchain import Markov # simple class for generating markov sentences
 import button_logic # just for handling button presses
-DEBUG = int(os.getenv("DEBUG"))
+try:
+    DEBUG = int(os.getenv("DEBUG"))
+except TypeError:
+    DEBUG = 0
+
 # global vars
 DISPLAY_WIDTH = 296
 DISPLAY_HEIGHT = 128
@@ -62,6 +67,7 @@ def image_to_display(img):
     xpos = 0
     disp.EPD_Dis_Part(xpos, xpos+im.size[0]-1, ypos, ypos+im.size[1]-1, listim2) # xStart, xEnd, yStart, yEnd, DisBuffer
     uploadtime = time.time()
+    print "image uploaded, time: {}".format(uploadtime) 
 
 # initialise the display and clear it
 if not DEBUG:
@@ -78,6 +84,9 @@ if not DEBUG:
     # display part
     disp.EPD_init_Part()
     disp.delay()
+
+    # announce that we're ready
+    GPIO.output(green_led, True)
 
 # fonts for drawing within PIL
 andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
@@ -112,6 +121,10 @@ def generate_sentence(font):
 # our entry point
 def main():
 
+    draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill="black")
+    image_to_display(main_img)
+    time.sleep(1)
+
     while True:
         starttime = time.time()
 
@@ -120,7 +133,8 @@ def main():
 
         if state_button == False:
             button_logic.change_state(yellow_led, blue_led, green_led)
-            time.sleep(0.5)
+            print "Button press!"
+	    time.sleep(0.3)
 
         if trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
@@ -132,20 +146,9 @@ def main():
             if DEBUG:
                 main_img.save("drawing_test.png")
             else:
+		print "updating display.."
                 image_to_display(main_img)
-
-            try:
-                user_input = raw_input("press n to generate another sentence, q to quit\n")
-                if user_input == "n":
-                    continue
-                elif user_input == "q":
-                    break
-                else:
-                    print "say that again!"
-            except ValueError:
-                print "say that again"
-
-            time.sleep(0.5)
+                time.sleep(1.0)
 
 if __name__ == "__main__":
     main()
