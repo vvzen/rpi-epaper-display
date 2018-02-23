@@ -11,7 +11,6 @@ app_mode = COOKIE
 #   change state and trigger buttons
 #   yellow, blue and green leds
 def setup_gpio(cs_btn, tr_btn, y_led, b_led, g_led):
-    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(cs_btn, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(tr_btn, GPIO.IN, pull_up_down=GPIO.PUD_UP)

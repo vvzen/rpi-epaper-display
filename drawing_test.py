@@ -151,4 +151,9 @@ def main():
                 time.sleep(1.0)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        GPIO.cleanup()
