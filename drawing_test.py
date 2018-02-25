@@ -81,18 +81,18 @@ def main():
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
             # bg
-            draw.rectangle([0, 0, 10, 10], fill=255)
+            draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
             # border
-            draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=255)
+            # draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=0)
 
             # text stuff
-            f = ImageFont.load_default()
-            txt = Image.new('L', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT))
-            d = ImageDraw.Draw(txt)
-            d.text( (0, 0), "Someplace Near Boulder",  font=f, fill=255)
-            w=txt.rotate(17.5,  expand=1)
-
-            image.paste( ImageOps.colorize(w, (0,0,0), (255,255,84)), (242,60),  w)
+            draw.line((16, 60, 56, 60), fill = 255)
+            draw.line((56, 60, 56, 110), fill = 255)
+            draw.line((16, 110, 56, 110), fill = 255)
+            draw.line((16, 110, 16, 60), fill = 255)
+            draw.line((16, 60, 56, 110), fill = 255)
+            draw.line((56, 60, 16, 110), fill = 255)
+            draw.text((0, 0), "e-Paper Demo", font=andale_ttf_small, fill=255)
 
             image.save("current_image.png")
 
