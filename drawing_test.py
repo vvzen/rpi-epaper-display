@@ -80,15 +80,12 @@ def main():
         elif trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
-            # from waveshare demo
-            # draw.text((8, 12), 'Hello world!', font=andale_ttf_small, fill = 255)
-            draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
+            # bg
             draw.rectangle([0, 0, 10, 10], fill=255)
-            draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 10, 10], fill=255)
-            draw.text((10, 10), 'pippo', font=andale_ttf_small, fill = 255)
-            
-            # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
-            # draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
+            # border
+            draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=255)
+            # sentence
+            draw.text(pos_x, pos_y, text, font=andale_ttf_small, fill=255)
 
             image = image.rotate(270)
 
