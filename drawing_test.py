@@ -66,9 +66,6 @@ def main():
     # announce that we're ready
     GPIO.output(green_led, True)
 
-    # for partial update
-    epd.init(epd.lut_partial_update)
-
     while True:
         starttime = time.time()
 
