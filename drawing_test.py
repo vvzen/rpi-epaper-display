@@ -26,6 +26,9 @@ yellow_led = 20
 # display stuff
 bus = 0
 device = 0
+if not DEBUG:
+    import spidev as SPI # serial peripheral interface bus, where the display connects
+    from EPD_driver import EPD_driver
 disp = EPD_driver(spi = SPI.SpiDev(bus, device))
 
 # fonts for drawing within PIL
@@ -46,10 +49,6 @@ def init():
         print "DEBUG mode"
     else:
         print "PRODUCTION Mode"
-    
-    if not DEBUG:
-        import spidev as SPI # serial peripheral interface bus, where the display connects
-        from EPD_driver import EPD_driver
         button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
 
     # initialise the display and clear it
