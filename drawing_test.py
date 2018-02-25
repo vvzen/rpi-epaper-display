@@ -2,7 +2,7 @@
 #*- coding: utf-8 *-
 import RPi.GPIO as GPIO
 import epd2in9 # waveshare module for the epaper display
-import Image, ImageDraw, ImageFont, ImageOps  # PIL - PythonImageLibrary
+import Image, ImageDraw, ImageFont, ImageChops  # PIL - PythonImageLibrary
 import time, datetime, sys, signal, urllib, requests, random, os
 from StringIO import StringIO
 from markov.markovchain import Markov # simple class for generating markov sentences
