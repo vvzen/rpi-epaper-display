@@ -82,36 +82,20 @@ def main():
 
         elif trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
-
-            epd.clear_frame_memory(0xFF)
-            epd.display_frame()
-            epd.clear_frame_memory(0xFF)
-            epd.display_frame()
-
-            image = Image.open('source/monocolor.bmp')
-        ##
-        # there are 2 memory areas embedded in the e-paper display
-        # and once the display is refreshed, the memory area will be auto-toggled,
-        # i.e. the next action of SetFrameMemory will set the other memory area
-        # therefore you have to set the frame memory twice.
-        ##     
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
-
-            time_image = Image.new('1', (96, 32), 255)  # 255: clear the frame
-            draw = ImageDraw.Draw(time_image)
-            font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 32)
-            image_width, image_height = time_image.size
             
-            # draw a rectangle to clear the image
-            draw.rectangle((0, 0, image_width, image_height), fill = 255)
-            draw.text((0, 0), time.strftime('%M:%S'), font = font, fill = 0)
-            epd.set_frame_memory(time_image.rotate(270), 80, 80)
+            # draw.rectangle([0, 0, 10, 10], fill=0)
+            txt = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), (0,0))
+            d = ImageDraw.Draw(txt)
+            d.text((0, 0), "Example", fill=(0, 255), font=andale_ttf_small)
+            
+            combined = Image.alpha_composite(image, txt)
+            combined.save("current_image.png")
+
+            epd.clear_frame_memory(0xFF)
+            epd.set_frame_memory(combined, 0, 0)
             epd.display_frame()
 
-            image.save("current_image.png")
+            epd.delay_ms(2000)
 
 if __name__ == "__main__":
     try:
