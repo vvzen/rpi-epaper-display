@@ -84,10 +84,13 @@ def main():
             # draw.text((8, 12), 'Hello world!', font=andale_ttf_small, fill = 255)
             draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
             draw.rectangle([0, 0, 10, 10], fill=255)
+            draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 10, 10], fill=255)
             draw.text((10, 10), 'pippo', font=andale_ttf_small, fill = 255)
             
             # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
             # draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
+
+            image = image.rotate(270)
 
             # clear memory
             epd.clear_frame_memory(0xFF)
