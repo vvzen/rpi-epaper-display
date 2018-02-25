@@ -101,8 +101,8 @@ def main():
 
             # # draw a rectangle to clear the image
             draw.rectangle((0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), fill=255)
-            draw.text((0, 0), "Hello world!", font=andale_ttf_small, fill=0)
-            epd.set_frame_memory(image.rotate(270), 0, 0)
+            draw.text((pos_x, pos_y), text, font=andale_ttf_small, fill=0)
+            epd.set_frame_memory(image.rotate(90), 0, 0)
             epd.display_frame()
             
             # main_img.save("current_image.png")
