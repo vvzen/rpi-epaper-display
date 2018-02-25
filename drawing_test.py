@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #*- coding: utf-8 *-
 import RPi.GPIO as GPIO
+import epd2in9 # waveshare module for the epaper display
 import Image, ImageDraw, ImageFont  # PIL - PythonImageLibrary
 import time, datetime, sys, signal, urllib, requests, random, os
 from StringIO import StringIO
@@ -12,24 +13,13 @@ except TypeError:
     DEBUG = 0
 
 # global vars
-DISPLAY_WIDTH = 296
-DISPLAY_HEIGHT = 128
 current_dir = os.path.abspath(os.path.dirname(__file__))
-
 # pin vars
 trigger_pin = 13
 change_state_pin = 6
 green_led = 21
 blue_led = 16
 yellow_led = 20
-
-# display stuff
-bus = 0
-device = 0
-if not DEBUG:
-    import spidev as SPI # serial peripheral interface bus, where the display connects
-    from EPD_driver import EPD_driver
-disp = EPD_driver(spi = SPI.SpiDev(bus, device))
 
 # fonts for drawing within PIL
 andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
@@ -39,68 +29,6 @@ andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf",
 # the main_img is then copied to the display (drawing on the disp itself is no fun)
 main_img = Image.new("1", (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 draw = ImageDraw.Draw(main_img)
-
-def init():
-    '''
-    if required, performs loading of required modules
-    and display and LEDs initialisation
-    '''
-    if DEBUG:
-        print "DEBUG mode"
-    else:
-        print "PRODUCTION Mode"
-        button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
-
-    # initialise the display and clear it
-    if not DEBUG:
-        global disp
-        print "disp size : %dx%d"%(disp.xDot, disp.yDot)
-
-        print '------------init and Clear full screen------------'
-        disp.Dis_Clear_full()
-        disp.delay()
-        print "display cleared and ready!"
-
-        # display part
-        disp.EPD_init_Part()
-        disp.delay()
-
-        # announce that we're ready
-        GPIO.output(green_led, True)
-
-# quit app gracefully
-def sigterm_handler(signum, frame):
-    print 'closing app, SIGTERM signal received'
-    sys.exit(0)
-
-# writes the image to the display
-def image_to_display(img):
-    # prepare for display
-    im = img.transpose(Image.ROTATE_90)
-    listim = list(im.getdata())
-    # print im.format, im.size, im.mode, len(listim)
-    # convert to list / bitmap
-    listim2 = []
-    for y in range(0, im.size[1]):
-        for x in range(0, im.size[0]/8):
-            val = 0
-            for x8 in range(0, 8):
-                if listim[(im.size[1]-y-1)*im.size[0] + x*8 + (7-x8)] > 128:
-                    # print x,y,x8,'ON'
-                    val = val | 0x01 << x8
-                else:
-                    # print x,y,x8,'OFF'
-                    pass
-            # print val
-            listim2.append(val)
-    for x in range(0,1000):
-        listim2.append(0)
-    # print len(listim2)
-    ypos = 0
-    xpos = 0
-    disp.EPD_Dis_Part(xpos, xpos+im.size[0]-1, ypos, ypos+im.size[1]-1, listim2) # xStart, xEnd, yStart, yEnd, DisBuffer
-    uploadtime = time.time()
-    print "image uploaded, time: {}".format(uploadtime) 
 
 def generate_sentence(font):
     # generate sentence
@@ -126,11 +54,17 @@ def generate_sentence(font):
 # our entry point
 def main():
 
-    signal.signal(signal.SIGTERM, sigterm_handler)
-    random.seed(time.time())
+    epd = epd2in9.EPD()
+    epd.init(epd.lut_full_update)
+
+    # For simplicity, the arguments are explicit numerical coordinates
+    image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)  # 255: clear the frame
+    draw = ImageDraw.Draw(image)
     
     # perform initial setup of display and GPIO
-    init()
+    button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
+    # announce that we're ready
+    GPIO.output(green_led, True)
 
     draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill="black")
     image_to_display(main_img)
@@ -149,13 +83,36 @@ def main():
 
         elif trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
-            #main_img.paste(main_img, (0, 0))
-            draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill=255)
-            draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
             
-            main_img.save("current_image.png")
-            print "updating display.."
-            image_to_display(main_img)
+            # from waveshare demo
+            draw.text((8, 12), 'Hello world!', font=andale_ttf_small, fill = 255)
+            draw.text((8, 36), 'e-Paper Demo', font=andale_ttf_small, fill = 0)
+            draw.line((16, 60, 56, 60), fill = 0)
+            draw.line((56, 60, 56, 110), fill = 0)
+            draw.line((16, 110, 56, 110), fill = 0)
+            draw.line((16, 110, 16, 60), fill = 0)
+            draw.line((16, 60, 56, 110), fill = 0)
+            draw.line((56, 60, 16, 110), fill = 0)
+            
+            # draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill=255)
+            # draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
+
+            # clear memory
+            epd.clear_frame_memory(0xFF)
+            epd.set_frame_memory(image, 0, 0)
+            epd.display_frame()
+
+            epd.delay_ms(2000)
+
+            # # draw a rectangle to clear the image
+            # draw.rectangle((0, 0, image_width, image_height), fill = 255)
+            # draw.text((0, 0), time.strftime('%M:%S'), font = font, fill = 0)
+            # epd.set_frame_memory(time_image.rotate(270), 80, 80)
+            # epd.display_frame()
+            
+            # main_img.save("current_image.png")
+            # print "updating display.."
+            # image_to_display(main_img)
 	    
 
 if __name__ == "__main__":
