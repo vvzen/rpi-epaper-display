@@ -94,7 +94,7 @@ def main():
             draw.line((56, 60, 16, 110), fill = 255)
             draw.text((0, 0), "e-Paper Demo", font=andale_ttf_small, fill=255)
 
-            image = image.transpose(Image.ROTATE_90)
+            image = image.transpose(Image.TRANSPOSE)
             image.save("current_image.png")
 
             epd.set_frame_memory(image, 0, 0)
