@@ -132,7 +132,7 @@ def main():
     # perform initial setup of display and GPIO
     init()
 
-    draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill="black")
+    draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill="black")
     image_to_display(main_img)
     time.sleep(1)
 
@@ -150,7 +150,7 @@ def main():
         if trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             #main_img.paste(main_img, (0, 0))
-            draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT]), fill=255)
+            draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill=255)
             draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
             # draw.text((tpx, tpy), text, fill=255, font=andale_ttf_small)
             main_img.save("current_image.png")
