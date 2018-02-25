@@ -101,7 +101,7 @@ def main():
 
             # Drawing the text on the text image:
             text_buffer = ImageDraw.Draw(text_image)
-            text_buffer.text((0, 0), text, font=font, fill=font_color)
+            text_buffer.text((0, 0), text, font=andale_ttf_scaled, fill=255)
 
             # Rotating the text image:
             rotation_degrees = 90
