@@ -47,8 +47,8 @@ def main():
 
     # main_img is used as screen buffer, all image composing/drawing is done in PIL,
     # the main_img is then copied to the display (drawing on the disp itself is no fun)
-    main_img = Image.new("1", (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT))
-    draw = ImageDraw.Draw(main_img)
+    # main_img = Image.new("1", (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT))
+    # draw = ImageDraw.Draw(main_img)
 
     # fonts for drawing within PIL
     andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
@@ -65,10 +65,6 @@ def main():
     button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
     # announce that we're ready
     GPIO.output(green_led, True)
-
-    draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill="black")
-    image_to_display(main_img)
-    time.sleep(1)
 
     while True:
         starttime = time.time()
@@ -112,7 +108,6 @@ def main():
             
             # main_img.save("current_image.png")
             # print "updating display.."
-            # image_to_display(main_img)
 	    
 
 if __name__ == "__main__":
