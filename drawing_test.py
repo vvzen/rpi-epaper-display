@@ -66,6 +66,11 @@ def main():
     # announce that we're ready
     GPIO.output(green_led, True)
 
+    # for partial update
+    epd.init(epd.lut_partial_update)
+    
+    draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
+
     while True:
         starttime = time.time()
 
@@ -81,54 +86,21 @@ def main():
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
             # bg
-            draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
+            # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
             # border
             # draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=0)
 
             # text stuff
-            draw.line((16, 60, 56, 60), fill = 255)
-            draw.line((56, 60, 56, 110), fill = 255)
-            draw.line((16, 110, 56, 110), fill = 255)
-            draw.line((16, 110, 16, 60), fill = 255)
-            draw.line((16, 60, 56, 110), fill = 255)
-            draw.line((56, 60, 16, 110), fill = 255)
-            draw.text((0, 0), "e-Paper Demo", font=andale_ttf_small, fill=255)
+            time_image = Image.new('1', (96, 32), 255)  # 255: clear the frame
+            draw = ImageDraw.Draw(time_image)
+            image_width, image_height = time_image.size
+            # draw a rectangle to clear the image
+            draw.rectangle((0, 0, image_width, image_height), fill=0)
+            draw.text((0, 0), time.strftime('%M:%S'), font=andale_ttf_small, fill=255)
+            epd.set_frame_memory(time_image.rotate(270), 80, 80)
+            epd.display_frame()
 
-            image = image.transpose(Image.ROTATE_270)
             image.save("current_image.png")
-
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
-            
-            epd.delay_ms(2000)
-            
-            # draw.text((pos_x, pos_y), text, font=andale_ttf_small, fill=0)
-
-            # image = image.rotate(90)
-
-            # clear memory
-            # epd.clear_frame_memory(0xFF)
-            # epd.set_frame_memory(image, 0, 0)
-            # epd.display_frame()
-
-            # epd.delay_ms(2000)
-            
-            # epd.set_frame_memory(image, 0, 0)
-            # epd.display_frame()
-            # epd.set_frame_memory(image, 0, 0)
-            # epd.display_frame()``
-
-            # # # draw a rectangle to clear the image
-            # draw.rectangle((0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), fill=255)
-            # draw.text((pos_x, pos_y), text, font=andale_ttf_small, fill=0)
-            # epd.set_frame_memory(image.rotate(90), 0, 0)
-            # epd.display_frame()
-            
-            # main_img.save("current_image.png")
-            # print "updating display.."
-	    
 
 if __name__ == "__main__":
     try:
