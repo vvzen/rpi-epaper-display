@@ -87,7 +87,7 @@ def main():
             
             text_image.save("current_text.png")
 
-            combined = ImageChops.add(image, text_image)
+            combined = ImageChops.multiply(image, text_image)
             combined.save("current_image.png")
 
             epd.clear_frame_memory(0xFF)
