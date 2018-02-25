@@ -23,22 +23,53 @@ green_led = 21
 blue_led = 16
 yellow_led = 20
 
-if DEBUG:
-	print "DEBUG mode"
-else:
-	print "PRODUCTION Mode"
+# fonts for drawing within PIL
+andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
+andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 26)
 
-if not DEBUG:
-    import spidev as SPI # serial peripheral interface bus, where the display connects
-    from EPD_driver import EPD_driver
-    button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
+# main_img is used as screen buffer, all image composing/drawing is done in PIL,
+# the main_img is then copied to the display (drawing on the disp itself is no fun)
+main_img = Image.new("1", (DISPLAY_WIDTH, DISPLAY_HEIGHT))
+draw = ImageDraw.Draw(main_img)
+
+def init():
+    '''
+    if required, performs loading of required modules
+    and display and LEDs initialisation
+    '''
+    if DEBUG:
+        print "DEBUG mode"
+    else:
+        print "PRODUCTION Mode"
+    
+    if not DEBUG:
+        import spidev as SPI # serial peripheral interface bus, where the display connects
+        from EPD_driver import EPD_driver
+        button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
+
+    # initialise the display and clear it
+    if not DEBUG:
+        bus = 0
+        device = 0
+        disp = EPD_driver(spi = SPI.SpiDev(bus, device))
+        print "disp size : %dx%d"%(disp.xDot, disp.yDot)
+
+        print '------------init and Clear full screen------------'
+        disp.Dis_Clear_full()
+        disp.delay()
+        print "display cleared and ready!"
+
+        # display part
+        disp.EPD_init_Part()
+        disp.delay()
+
+        # announce that we're ready
+        GPIO.output(green_led, True)
 
 # quit app gracefully
 def sigterm_handler(signum, frame):
     print 'closing app, SIGTERM signal received'
     sys.exit(0)
-signal.signal(signal.SIGTERM, sigterm_handler)
-random.seed(time.time())
 
 # writes the image to the display
 def image_to_display(img):
@@ -69,34 +100,6 @@ def image_to_display(img):
     uploadtime = time.time()
     print "image uploaded, time: {}".format(uploadtime) 
 
-# initialise the display and clear it
-if not DEBUG:
-    bus = 0
-    device = 0
-    disp = EPD_driver(spi = SPI.SpiDev(bus, device))
-    print "disp size : %dx%d"%(disp.xDot, disp.yDot)
-
-    print '------------init and Clear full screen------------'
-    disp.Dis_Clear_full()
-    disp.delay()
-    print "display cleared and ready!"
-
-    # display part
-    disp.EPD_init_Part()
-    disp.delay()
-
-    # announce that we're ready
-    GPIO.output(green_led, True)
-
-# fonts for drawing within PIL
-andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
-andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 26)
-
-# main_img is used as screen buffer, all image composing/drawing is done in PIL,
-# the main_img is then copied to the display (drawing on the disp itself is no fun)
-main_img = Image.new("1", (DISPLAY_WIDTH, DISPLAY_HEIGHT))
-draw = ImageDraw.Draw(main_img)
-
 def generate_sentence(font):
     # generate sentence
     markov = Markov(order=2)
@@ -120,6 +123,12 @@ def generate_sentence(font):
 
 # our entry point
 def main():
+
+    signal.signal(signal.SIGTERM, sigterm_handler)
+    random.seed(time.time())
+    
+    # perform initial setup of display and GPIO
+    init()
 
     draw.rectangle(((0, 0), (DISPLAY_WIDTH, DISPLAY_HEIGHT)), fill="black")
     image_to_display(main_img)
