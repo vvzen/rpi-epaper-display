@@ -86,9 +86,9 @@ def main():
             # draw.rectangle([0, 0, 10, 10], fill=0)
             txt = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)
             d = ImageDraw.Draw(txt)
-            d.text((0, 0), "Example", fill=(0, 255), font=andale_ttf_small)
+            d.text((0, 0), "Example", fill=0, font=andale_ttf_small)
             
-            combined = Image.alpha_composite(image, txt)
+            combined = ImageChops.add(image, txt)
             combined.save("current_image.png")
 
             epd.clear_frame_memory(0xFF)
