@@ -76,7 +76,7 @@ def sigterm_handler(signum, frame):
 # writes the image to the display
 def image_to_display(img):
     # prepare for display
-    im = main_img.transpose(Image.ROTATE_90)
+    im = img.transpose(Image.ROTATE_90)
     listim = list(im.getdata())
     # print im.format, im.size, im.mode, len(listim)
     # convert to list / bitmap
@@ -145,17 +145,18 @@ def main():
         if state_button == False:
             button_logic.change_state(yellow_led, blue_led, green_led)
             print "Button press!"
-	    time.sleep(0.3)
+            time.sleep(0.2)
 
-        if trigger_button == False:
+        elif trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             #main_img.paste(main_img, (0, 0))
             draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill=255)
             draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
-            # draw.text((tpx, tpy), text, fill=255, font=andale_ttf_small)
+            
             main_img.save("current_image.png")
             print "updating display.."
             image_to_display(main_img)
+	    
 
 if __name__ == "__main__":
     try:
