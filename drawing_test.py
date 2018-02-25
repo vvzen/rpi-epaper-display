@@ -85,7 +85,7 @@ def main():
             # border
             draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=255)
             # sentence
-            draw.text(pos_x, pos_y, text, font=andale_ttf_small, fill=255)
+            draw.text((pos_x, pos_y), text, font=andale_ttf_small, fill=255)
 
             image = image.rotate(270)
 
