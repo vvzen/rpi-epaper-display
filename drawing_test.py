@@ -83,8 +83,11 @@ def main():
         elif trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
 
-            # for partial update
-            epd.init(epd.lut_partial_update)
+            epd.clear_frame_memory(0xFF)
+            epd.display_frame()
+            epd.clear_frame_memory(0xFF)
+            epd.display_frame()
+
             image = Image.open('source/monocolor.bmp')
         ##
         # there are 2 memory areas embedded in the e-paper display
