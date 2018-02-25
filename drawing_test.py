@@ -89,7 +89,8 @@ def main():
 
             # clear memory
             epd.clear_frame_memory(0xFF)
-            epd.set_frame_memory(image, 0, 0)
+            epd.set_frame_memory(image.rotate(90), 0, 0)
+            img.save("current_image.png")
             epd.display_frame()
 
             epd.delay_ms(2000)
