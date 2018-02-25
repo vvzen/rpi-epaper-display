@@ -58,7 +58,7 @@ def main():
     epd.init(epd.lut_full_update)
 
     # For simplicity, the arguments are explicit numerical coordinates
-    image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)  # 255: clear the frame
+    image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 0)  # 255: clear the frame
     draw = ImageDraw.Draw(image)
     
     # perform initial setup of display and GPIO
@@ -84,11 +84,13 @@ def main():
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
             # draw.rectangle([0, 0, 10, 10], fill=0)
-            txt = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)
-            d = ImageDraw.Draw(txt)
-            d.text((0, 0), "Example", fill=0, font=andale_ttf_small)
+            text_image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 0)
+            d = ImageDraw.Draw(text_image)
+            d.text((10, 10), "Example", fill=255, font=andale_ttf_small)
             
-            combined = ImageChops.add(image, txt)
+            text_image.save("current_text.png")
+
+            combined = ImageChops.add(image, text_image)
             combined.save("current_image.png")
 
             epd.clear_frame_memory(0xFF)
