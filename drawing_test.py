@@ -81,29 +81,29 @@ def main():
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
             # from waveshare demo
-            #draw.text((8, 12), 'Hello world!', font=andale_ttf_small, fill = 255)
-            #draw.text((8, 36), 'e-Paper Demo', font=andale_ttf_small, fill = 0)
+            # draw.text((8, 12), 'Hello world!', font=andale_ttf_small, fill = 255)
+            draw.text((8, 36), 'e-Paper Demo', font=andale_ttf_small, fill = 0)
             
             # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
             # draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
 
             # clear memory
-            #epd.clear_frame_memory(0xFF)
-            #epd.set_frame_memory(image, 0, 0)
-            #epd.display_frame()
+            epd.clear_frame_memory(0xFF)
+            epd.set_frame_memory(image, 0, 0)
+            epd.display_frame()
 
-            #epd.delay_ms(2000)
+            epd.delay_ms(2000)
             
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
+            # epd.set_frame_memory(image, 0, 0)
+            # epd.display_frame()
+            # epd.set_frame_memory(image, 0, 0)
+            # epd.display_frame()
 
-            # # draw a rectangle to clear the image
-            draw.rectangle((0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), fill=255)
-            draw.text((pos_x, pos_y), text, font=andale_ttf_small, fill=0)
-            epd.set_frame_memory(image.rotate(90), 0, 0)
-            epd.display_frame()
+            # # # draw a rectangle to clear the image
+            # draw.rectangle((0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), fill=255)
+            # draw.text((pos_x, pos_y), text, font=andale_ttf_small, fill=0)
+            # epd.set_frame_memory(image.rotate(90), 0, 0)
+            # epd.display_frame()
             
             # main_img.save("current_image.png")
             # print "updating display.."
