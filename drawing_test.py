@@ -86,41 +86,14 @@ def main():
             draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=255)
 
             # text stuff
-            text_image_width = epd2in9.EPD_WIDTH
-            text_image_height = epd2in9.EPD_HEIGHT
-            ''' Initially the text image will be larger than its ideal size because
-            we'll need to downscale it later in order to make the text look less
-            pixelated. '''
-            resize_by = 4
-            text_image = Image.new(
-                'L',
-                (text_image_width * resize_by, text_image_height * resize_by)
-            )
+            f = ImageFont.load_default()
+            txt = Image.new('L', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT))
+            d = ImageDraw.Draw(txt)
+            d.text( (0, 0), "Someplace Near Boulder",  font=f, fill=255)
+            w=txt.rotate(17.5,  expand=1)
 
-            andale_ttf_scaled = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16*resize_by)
+            image.paste( ImageOps.colorize(w, (0,0,0), (255,255,84)), (242,60),  w)
 
-            # Drawing the text on the text image:
-            text_buffer = ImageDraw.Draw(text_image)
-            text_buffer.text((0, 0), text, font=andale_ttf_scaled, fill=0)
-
-            # Rotating the text image:
-            rotation_degrees = 90
-            text_image = text_image.rotate(rotation_degrees, expand=1)
-            # Resizing the text image in order to make the text look better:
-            text_image = text_image.resize(
-                (text_image_width, text_image_height),
-                Image.ANTIALIAS
-            )
-            
-            # Pasting the rotated transparent text image onto the base image:    
-            # image = Image.open(base_image)
-            colorization = ImageOps.colorize(
-                text_image,
-                (0, 0, 0),
-                (255, 255, 255)
-            )
-            text_position_on_base_image = (10, 10)
-            image.paste(colorization, text_position_on_base_image, text_image)
             image.save("current_image.png")
 
             epd.set_frame_memory(image, 0, 0)
