@@ -84,7 +84,7 @@ def main():
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
             # draw.rectangle([0, 0, 10, 10], fill=0)
-            txt = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), (0,0))
+            txt = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)
             d = ImageDraw.Draw(txt)
             d.text((0, 0), "Example", fill=(0, 255), font=andale_ttf_small)
             
