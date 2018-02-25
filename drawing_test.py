@@ -88,6 +88,11 @@ def main():
             # border
             # draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=0)
 
+            epd.set_frame_memory(image, 0, 0)
+            epd.display_frame()
+            epd.set_frame_memory(image, 0, 0)
+            epd.display_frame()
+
             # text stuff
             time_image = Image.new('1', (96, 32), 255)  # 255: clear the frame
             draw = ImageDraw.Draw(time_image)
