@@ -21,15 +21,6 @@ green_led = 21
 blue_led = 16
 yellow_led = 20
 
-# fonts for drawing within PIL
-andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
-andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 26)
-
-# main_img is used as screen buffer, all image composing/drawing is done in PIL,
-# the main_img is then copied to the display (drawing on the disp itself is no fun)
-main_img = Image.new("1", (DISPLAY_WIDTH, DISPLAY_HEIGHT))
-draw = ImageDraw.Draw(main_img)
-
 def generate_sentence(font):
     # generate sentence
     markov = Markov(order=2)
@@ -40,8 +31,8 @@ def generate_sentence(font):
     g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "")
 
     # calculates padding so that it fits nicely in the display
-    padding_x = (DISPLAY_WIDTH - float(font.getsize(g_sentence)[0])) / 2
-    padding_y = (DISPLAY_HEIGHT - float(font.getsize(g_sentence)[1])) / 2
+    padding_x = (epd2in9.EPD_WIDTH - float(font.getsize(g_sentence)[0])) / 2
+    padding_y = (epd2in9.EPD_HEIGHT - float(font.getsize(g_sentence)[1])) / 2
 
     print "----> {}".format(g_sentence)
 
@@ -53,6 +44,15 @@ def generate_sentence(font):
 
 # our entry point
 def main():
+
+    # main_img is used as screen buffer, all image composing/drawing is done in PIL,
+    # the main_img is then copied to the display (drawing on the disp itself is no fun)
+    main_img = Image.new("1", (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT))
+    draw = ImageDraw.Draw(main_img)
+
+    # fonts for drawing within PIL
+    andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
+    andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 26)
 
     epd = epd2in9.EPD()
     epd.init(epd.lut_full_update)
@@ -66,7 +66,7 @@ def main():
     # announce that we're ready
     GPIO.output(green_led, True)
 
-    draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill="black")
+    draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill="black")
     image_to_display(main_img)
     time.sleep(1)
 
@@ -94,7 +94,7 @@ def main():
             draw.line((16, 60, 56, 110), fill = 0)
             draw.line((56, 60, 16, 110), fill = 0)
             
-            # draw.rectangle([0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT], fill=255)
+            # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
             # draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
 
             # clear memory
