@@ -97,10 +97,10 @@ def main():
 
             epd.delay_ms(2000)
             
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
-            epd.set_frame_memory(image, 0, 0)
-            epd.display_frame()
+            # epd.set_frame_memory(image, 0, 0)
+            # epd.display_frame()
+            # epd.set_frame_memory(image, 0, 0)
+            # epd.display_frame()``
 
             # # # draw a rectangle to clear the image
             # draw.rectangle((0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), fill=255)
