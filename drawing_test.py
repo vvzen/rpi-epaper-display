@@ -67,7 +67,7 @@ def main():
     GPIO.output(green_led, True)
 
     # for partial update
-    # epd.init(epd.lut_partial_update)
+    epd.init(epd.lut_partial_update)
 
     while True:
         starttime = time.time()
@@ -82,11 +82,6 @@ def main():
 
         elif trigger_button == False:
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
-            
-            epd.clear_frame_memory(0xFF)
-            epd.display_frame()
-            epd.clear_frame_memory(0xFF)
-            epd.display_frame()
 
             # for partial update
             epd.init(epd.lut_partial_update)
