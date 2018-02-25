@@ -67,9 +67,7 @@ def main():
     GPIO.output(green_led, True)
 
     # for partial update
-    epd.init(epd.lut_partial_update)
-    
-    draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
+    # epd.init(epd.lut_partial_update)
 
     while True:
         starttime = time.time()
@@ -86,7 +84,7 @@ def main():
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
             
             # bg
-            # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
+            draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=0)
             # border
             # draw.rectangle([epd2in9.EPD_WIDTH-10, epd2in9.EPD_HEIGHT-10, 5, 5], fill=0)
 
