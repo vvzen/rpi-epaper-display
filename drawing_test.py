@@ -121,6 +121,7 @@ def main():
             )
             text_position_on_base_image = (10, 10)
             image.paste(colorization, text_position_on_base_image, text_image)
+            image.save("current_image.png")
 
             epd.set_frame_memory(image, 0, 0)
             epd.display_frame()
@@ -136,7 +137,6 @@ def main():
             # clear memory
             # epd.clear_frame_memory(0xFF)
             # epd.set_frame_memory(image, 0, 0)
-            # image.save("current_image.png")
             # epd.display_frame()
 
             # epd.delay_ms(2000)
