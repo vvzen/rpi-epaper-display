@@ -23,6 +23,11 @@ green_led = 21
 blue_led = 16
 yellow_led = 20
 
+# display stuff
+bus = 0
+device = 0
+disp = EPD_driver(spi = SPI.SpiDev(bus, device))
+
 # fonts for drawing within PIL
 andale_ttf_small = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 16)
 andale_ttf_large = ImageFont.truetype("source/fonts/andale_mono/AndaleMono.ttf", 26)
@@ -49,9 +54,7 @@ def init():
 
     # initialise the display and clear it
     if not DEBUG:
-        bus = 0
-        device = 0
-        disp = EPD_driver(spi = SPI.SpiDev(bus, device))
+        global disp
         print "disp size : %dx%d"%(disp.xDot, disp.yDot)
 
         print '------------init and Clear full screen------------'
