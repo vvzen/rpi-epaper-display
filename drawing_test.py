@@ -58,8 +58,7 @@ def main():
     epd.init(epd.lut_full_update)
 
     # For simplicity, the arguments are explicit numerical coordinates
-    # image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)  # 255: clear the frame
-    image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH), 255)  # 255: clear the frame
+    image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(image)
     
     # perform initial setup of display and GPIO
@@ -95,6 +94,7 @@ def main():
             draw.line((56, 60, 16, 110), fill = 255)
             draw.text((0, 0), "e-Paper Demo", font=andale_ttf_small, fill=255)
 
+            image = image.transpose(PIL.Image.ROTATE_90)
             image.save("current_image.png")
 
             epd.set_frame_memory(image, 0, 0)
