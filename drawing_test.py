@@ -82,7 +82,7 @@ def main():
             
             # from waveshare demo
             # draw.text((8, 12), 'Hello world!', font=andale_ttf_small, fill = 255)
-            draw.text((8, 36), 'e-Paper Demo', font=andale_ttf_small, fill = 0)
+            draw.text((8, 36), 'pippo', font=andale_ttf_small, fill = 0)
             
             # draw.rectangle([0, 0, epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT], fill=255)
             # draw.text((pos_x, pos_y), text, fill=0, font=andale_ttf_small)
