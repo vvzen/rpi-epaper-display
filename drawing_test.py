@@ -96,11 +96,6 @@ def main():
 
             epd.delay_ms(2000)
 
-            epd.clear_frame_memory(0xFF)
-            epd.display_frame()
-            epd.clear_frame_memory(0xFF)
-            epd.display_frame()
-
 if __name__ == "__main__":
     try:
         main()
