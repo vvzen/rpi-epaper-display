@@ -70,8 +70,7 @@ def main():
 
     # for partial update
     epd.init(epd.lut_partial_update)
-    # image = Image.open('source/monocolor.bmp')
-    image = Image.open('example_image_portrait.png') # open image in grayscale mode
+    image = Image.open('source/monocolor.bmp')
 ##
  # there are 2 memory areas embedded in the e-paper display
  # and once the display is refreshed, the memory area will be auto-toggled,

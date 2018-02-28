@@ -31,8 +31,8 @@ def generate_sentence(font):
     g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "")
 
     # calculates padding so that it fits nicely in the display
-    padding_x = (epd2in9.EPD_WIDTH - float(font.getsize(g_sentence)[0])) / 2
-    padding_y = (epd2in9.EPD_HEIGHT - float(font.getsize(g_sentence)[1])) / 2
+    padding_x = (epd2in9.EPD_HEIGHT - float(font.getsize(g_sentence)[0])) * 0.5
+    padding_y = (epd2in9.EPD_WIDTH - float(font.getsize(g_sentence)[1])) * 0.5
 
     print "----> {}".format(g_sentence)
 
@@ -78,20 +78,23 @@ def main():
             time.sleep(0.2)
 
         elif trigger_button == False:
-            text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
-            
-            # draw.rectangle([0, 0, 10, 10], fill=0)
-            text_image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 0)
-            d = ImageDraw.Draw(text_image)
-            d.text((10, 10), "Example", fill=255, font=andale_ttf_small)
-            
-            text_image.save("current_text.png")
 
-            combined = ImageChops.multiply(image, text_image)
-            combined.save("current_image.png")
+            text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
+
+            # create binary image filled with white
+            base_image = Image.new("1", size=(epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), color=255)
+
+            # create the text image
+            text_image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH))
+            # draw the text
+            text_draw_buffer = ImageDraw.Draw(text_image)
+            text_draw_buffer.text((0, 0), text,  font=andale_ttf_small, fill=255)
+            text_image = text_image.rotate(270,  expand=1)
+
+            result = ImageChops.multiply(text_image, base_image)
 
             epd.clear_frame_memory(0xFF)
-            epd.set_frame_memory(combined, 0, 0)
+            epd.set_frame_memory(result, 0, 0)
             epd.display_frame()
 
             epd.delay_ms(2000)
