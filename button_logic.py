@@ -2,9 +2,9 @@ import RPi.GPIO as GPIO
 
 # app logic vars
 COOKIE = 0
-MOTIVATIONAL = 1
+QUOTE = 1
 MARKOV = 2
-app_mode = COOKIE
+app_mode = QUOTE
 
 # setup gpio
 # @args:
@@ -34,7 +34,7 @@ def change_state(y_led, b_led, g_led):
         GPIO.output(b_led, False)
         GPIO.output(g_led, False)
         GPIO.output(y_led, True)
-    elif app_mode == MOTIVATIONAL:
+    elif app_mode == QUOTE:
         GPIO.output(b_led, True)
         GPIO.output(g_led, False)
         GPIO.output(y_led, False)	

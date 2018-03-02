@@ -27,8 +27,13 @@ def generate_sentence(font):
     markov.train(os.path.join(current_dir, "source", "data", "motivational.txt"))
     g_sentence = markov.generate(4)
 
+    # test if sentence is too long
+    while len(g_sentence) > 29:
+	g_sentence = markov.generate(4)
+
     # remove all special symbols
     g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "")
+    #g_sentence = g_sentence.replace(" ", r"\n")
 
     # calculates padding so that it fits nicely in the display
     padding_x = (epd2in9.EPD_HEIGHT - float(font.getsize(g_sentence)[0])) * 0.5
@@ -63,8 +68,13 @@ def main():
     
     # perform initial setup of display and GPIO
     button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
+    
     # announce that we're ready
     GPIO.output(green_led, True)
+
+    # TODO: draw to epaper display
+    
+   
 
     while True:
         starttime = time.time()
@@ -78,7 +88,6 @@ def main():
             time.sleep(0.2)
 
         elif trigger_button == False:
-
             text, pos_x, pos_y = generate_sentence(font=andale_ttf_small)
 
             # create binary image filled with white
@@ -88,10 +97,11 @@ def main():
             text_image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH))
             # draw the text
             text_draw_buffer = ImageDraw.Draw(text_image)
-            text_draw_buffer.text((0, 0), text,  font=andale_ttf_small, fill=255)
+            text_draw_buffer.text((pos_x, pos_y), text,  font=andale_ttf_small, fill=255)
             text_image = text_image.rotate(270,  expand=1)
 
             result = ImageChops.multiply(text_image, base_image)
+	    result.save("result.png")
 
             epd.clear_frame_memory(0xFF)
             epd.set_frame_memory(result, 0, 0)
