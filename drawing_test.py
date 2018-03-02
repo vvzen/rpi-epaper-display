@@ -7,6 +7,7 @@ import time, datetime, sys, signal, urllib, requests, random, os
 from StringIO import StringIO
 from markov.markovchain import Markov # simple class for generating markov sentences
 import button_logic # just for handling button presses
+import default
 try:
     DEBUG = int(os.getenv("DEBUG"))
 except TypeError:
@@ -27,6 +28,7 @@ def generate_sentence(font):
     markov.train(os.path.join(current_dir, "source", "data", "motivational.txt"))
     g_sentence = markov.generate(4)
 
+    print "here"
     # test if sentence is too long
     while len(g_sentence) > 29:
 	g_sentence = markov.generate(4)
@@ -73,8 +75,7 @@ def main():
     GPIO.output(green_led, True)
 
     # TODO: draw to epaper display
-    
-   
+    default.main()
 
     while True:
         starttime = time.time()
