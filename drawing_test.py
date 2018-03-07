@@ -15,6 +15,8 @@ except TypeError:
 
 # global vars
 current_dir = os.path.abspath(os.path.dirname(__file__))
+pwn = None
+
 # pin vars
 servo_pin = 4 # physical 7
 trigger_pin = 13
@@ -107,14 +109,14 @@ def main():
     image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(image)
     
+    # perform initial setup of display and GPIO
+    button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
+
     # perform initial setup of the servo
     setup_servo()
     move_servo(0)
     move_servo(180)
     move_servo(90)
-
-    # perform initial setup of display and GPIO
-    button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
     
     # announce that we're ready
     GPIO.output(green_led, True)
