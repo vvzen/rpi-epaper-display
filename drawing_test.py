@@ -15,16 +15,55 @@ except TypeError:
 # global vars
 current_dir = os.path.abspath(os.path.dirname(__file__))
 # pin vars
+servo_pin = 4 # physical 7
 trigger_pin = 13
 change_state_pin = 6
 green_led = 21
 blue_led = 16
 yellow_led = 20
 
+def remap(x, in_min, in_max, out_min, out_max):
+    '''
+    remaps x value from one range to the other one
+    '''
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
+def setup_servo():
+    '''
+    setup pwn for servo
+    '''
+    GPIO.setup(servo_pin, GPIO.OUTPUT)
+
+    pwm = GPIO.PWM(servo_pin, 50) # pin, duty cycle frequency
+    pwm.start(7.5) # make servo go into neutral position
+
+def move_servo(angle):
+    '''
+    rotate the servo to the given angle
+    '''
+
+    # constrain angle to min and max values
+    if angle > 90:
+        angle = 90
+    if angle < -90:
+        angle = -90
+    
+    percentage = remap(angle, -90, 90, 2.5, 12.5)
+    GPIO.output(servo_pin, True)
+    pwn.ChangeDutyCycle(percentage)
+    time.sleep(1)
+    GPIO.output(servo_pin, False)
+
 def generate_sentence(font):
+    '''
+    generate the required sentence (markov, cookie, etc..)
+    and returns the pos_x and y after calculating the length of the phrase
+    in order to draw it centered to the display
+    '''
+
     # generate sentence
     markov = Markov(order=2)
-    markov.train(os.path.join(current_dir, "source", "data", "motivational.txt"))
+    markov.train(os.path.join(current_dir, "source", "data", "motivational_markov.txt"))
     g_sentence = markov.generate(4)
 
     # test if sentence is too long
@@ -66,6 +105,9 @@ def main():
     image = Image.new('1', (epd2in9.EPD_WIDTH, epd2in9.EPD_HEIGHT), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(image)
     
+    # perform initial setup of the servo
+    setup_servo()
+
     # perform initial setup of display and GPIO
     button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
     
@@ -74,8 +116,6 @@ def main():
 
     # TODO: draw to epaper display
     
-   
-
     while True:
         starttime = time.time()
 
@@ -95,13 +135,13 @@ def main():
 
             # create the text image
             text_image = Image.new('1', (epd2in9.EPD_HEIGHT, epd2in9.EPD_WIDTH))
-            # draw the text
+            # draw the text and rotate it -90 degrees so that it fits the portait orientation
             text_draw_buffer = ImageDraw.Draw(text_image)
             text_draw_buffer.text((pos_x, pos_y), text,  font=andale_ttf_small, fill=255)
             text_image = text_image.rotate(270,  expand=1)
 
             result = ImageChops.multiply(text_image, base_image)
-	    result.save("result.png")
+	        result.save("result.png")
 
             epd.clear_frame_memory(0xFF)
             epd.set_frame_memory(result, 0, 0)
@@ -115,4 +155,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
+        pwm.stop()
         GPIO.cleanup()
