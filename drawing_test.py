@@ -121,7 +121,7 @@ def main():
     # announce that we're ready
     GPIO.output(green_led, True)
 
-    # TODO: draw to epaper display
+    # FIXME: draw to epaper display
     default.main()
 
     while True:
