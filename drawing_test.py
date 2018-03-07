@@ -35,7 +35,7 @@ def setup_servo():
     '''
     setup pwn for servo
     '''
-    GPIO.setup(servo_pin, GPIO.OUTPUT)
+    GPIO.setup(servo_pin, GPIO.OUT)
     global pwn
     pwm = GPIO.PWM(servo_pin, 50) # pin, duty cycle frequency
     pwm.start(7.5) # make servo go into neutral position
