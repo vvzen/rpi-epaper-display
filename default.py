@@ -39,7 +39,7 @@ def main():
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 16)
     draw.rectangle((0, 10, 128, 34), fill = 0)
-    draw.text((8, 12), 'Hello world!', font = font, fill = 255)
+    draw.text((8, 12), 'Display Ready!', font = font, fill = 255)
     draw.text((8, 36), 'e-Paper Demo', font = font, fill = 0)
     draw.line((16, 60, 56, 60), fill = 0)
     draw.line((56, 60, 56, 110), fill = 0)
@@ -76,7 +76,8 @@ def main():
  # and once the display is refreshed, the memory area will be auto-toggled,
  # i.e. the next action of SetFrameMemory will set the other memory area
  # therefore you have to set the frame memory twice.
- ##     
+ ##    
+    ''' 
     epd.set_frame_memory(image, 0, 0)
     epd.display_frame()
     epd.set_frame_memory(image, 0, 0)
@@ -92,6 +93,6 @@ def main():
         draw.text((0, 0), time.strftime('%M:%S'), font = font, fill = 0)
         epd.set_frame_memory(time_image.rotate(270), 80, 80)
         epd.display_frame()
-
+    '''
 if __name__ == '__main__':
     main()
