@@ -51,6 +51,7 @@ def move_servo(angle):
     if angle < -90:
         angle = -90
     
+    global pwn
     percentage = remap(angle, -90, 90, 2.5, 12.5)
     GPIO.output(servo_pin, True)
     pwn.ChangeDutyCycle(percentage)
