@@ -15,6 +15,8 @@ except TypeError:
 
 # global vars
 current_dir = os.path.abspath(os.path.dirname(__file__))
+pwm = None
+
 # pin vars
 servo_pin = 4 # physical 7
 trigger_pin = 13
@@ -34,7 +36,7 @@ def setup_servo():
     setup pwn for servo
     '''
     GPIO.setup(servo_pin, GPIO.OUTPUT)
-
+    global pwn
     pwm = GPIO.PWM(servo_pin, 50) # pin, duty cycle frequency
     pwm.start(7.5) # make servo go into neutral position
 
@@ -147,7 +149,7 @@ def main():
             text_image = text_image.rotate(270,  expand=1)
 
             result = ImageChops.multiply(text_image, base_image)
-	        result.save("result.png")
+	    result.save("result.png")
 
             epd.clear_frame_memory(0xFF)
             epd.set_frame_memory(result, 0, 0)
@@ -161,5 +163,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
-        pwm.stop()
+        #pwm.stop()
         GPIO.cleanup()
