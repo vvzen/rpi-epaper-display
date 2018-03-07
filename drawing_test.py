@@ -15,7 +15,7 @@ except TypeError:
 
 # global vars
 current_dir = os.path.abspath(os.path.dirname(__file__))
-pwn = None
+pwm = None
 
 # pin vars
 servo_pin = 4 # physical 7
@@ -51,10 +51,9 @@ def move_servo(angle):
     if angle < -90:
         angle = -90
     
-    global pwn
     percentage = remap(angle, -90, 90, 2.5, 12.5)
     GPIO.output(servo_pin, True)
-    pwn.ChangeDutyCycle(percentage)
+    pwm.ChangeDutyCycle(percentage)
     time.sleep(1)
     GPIO.output(servo_pin, False)
 
