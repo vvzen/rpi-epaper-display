@@ -109,6 +109,9 @@ def main():
     
     # perform initial setup of the servo
     setup_servo()
+    move_servo(0)
+    move_servo(180)
+    move_servo(90)
 
     # perform initial setup of display and GPIO
     button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
