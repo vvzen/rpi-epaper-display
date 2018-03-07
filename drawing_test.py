@@ -33,10 +33,10 @@ def remap(x, in_min, in_max, out_min, out_max):
 
 def setup_servo():
     '''
-    setup pwn for servo
+    setup pwm for servo
     '''
     GPIO.setup(servo_pin, GPIO.OUT)
-    global pwn
+    global pwm
     pwm = GPIO.PWM(servo_pin, 50) # pin, duty cycle frequency
     pwm.start(7.5) # make servo go into neutral position
 
