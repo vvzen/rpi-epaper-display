@@ -18,44 +18,11 @@ current_dir = os.path.abspath(os.path.dirname(__file__))
 pwm = None
 
 # pin vars
-servo_pin = 4 # physical 7
 trigger_pin = 13
 change_state_pin = 6
 green_led = 21
 blue_led = 16
 yellow_led = 20
-
-def remap(x, in_min, in_max, out_min, out_max):
-    '''
-    remaps x value from one range to the other one
-    '''
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
-def setup_servo():
-    '''
-    setup pwm for servo
-    '''
-    GPIO.setup(servo_pin, GPIO.OUT)
-    global pwm
-    pwm = GPIO.PWM(servo_pin, 50) # pin, duty cycle frequency
-    pwm.start(7.5) # make servo go into neutral position
-
-def move_servo(angle):
-    '''
-    rotate the servo to the given angle
-    '''
-
-    # constrain angle to min and max values
-    if angle > 90:
-        angle = 90
-    if angle < -90:
-        angle = -90
-    
-    percentage = remap(angle, -90, 90, 2.5, 12.5)
-    GPIO.output(servo_pin, True)
-    pwm.ChangeDutyCycle(percentage)
-    time.sleep(1)
-    GPIO.output(servo_pin, False)
 
 def generate_sentence(font):
     '''
@@ -66,13 +33,18 @@ def generate_sentence(font):
 
     # generate sentence
     markov = Markov(order=2)
-    markov.train(os.path.join(current_dir, "source", "data", "motivational_markov.txt"))
+
+    if button_logic.app_mode == button_logic.MARKOV:
+        markov.train(os.path.join(current_dir, "source", "data", "motivational_markov.txt"))
+    elif button_logic.app_mode == button_logic.QUOTE:
+        markov.train(os.path.join(current_dir, "source", "data", "star_wars_quotes.txt"))
+    elif button_logic.app_mode == button_logic.COOKIE:
+        markov.train(os.path.join(current_dir, "source", "data", "fortune_cookies.txt"))
     g_sentence = markov.generate(4)
 
-    print "here"
     # test if sentence is too long
     while len(g_sentence) > 29:
-	g_sentence = markov.generate(4)
+        g_sentence = markov.generate(4)
 
     # remove all special symbols
     g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "")
@@ -86,7 +58,6 @@ def generate_sentence(font):
 
     if DEBUG:
         print "length of sentence: {}".format(len(g_sentence))
-    	print "pixel size of sentence: {}".format(andale_ttf_small.getsize(g_sentence))
 
     return g_sentence, padding_x, padding_y
 
@@ -111,12 +82,6 @@ def main():
     
     # perform initial setup of display and GPIO
     button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
-
-    # perform initial setup of the servo
-    setup_servo()
-    move_servo(0)
-    move_servo(180)
-    move_servo(90)
     
     # announce that we're ready
     GPIO.output(green_led, True)
