@@ -2,7 +2,7 @@
 #*- coding: utf-8 *-
 import RPi.GPIO as GPIO
 import smbus
-import os, time
+import os, time, random
 import button_logic # just for handling button presses
 from markov.markovchain import Markov # simple class for generating markov sentences
 
@@ -35,6 +35,11 @@ def read_number():
     number = bus.read_byte(ADDRESS)
     return number
 
+def pick_random_sentence(path):
+    with open(path) as f:
+        lines = f.read()
+    return random.sample(lines, 1)
+
 def generate_sentence(mode):
     '''
     generate the required sentence (markov, cookie, etc..)
@@ -47,18 +52,19 @@ def generate_sentence(mode):
 
     if mode == button_logic.MARKOV:
         markov.train(os.path.join(CURRENT_DIR, "source", "data", "motivational_markov.txt"))
-    elif mode == button_logic.QUOTE:
-        markov.train(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
-    elif mode == button_logic.COOKIE:
-        markov.train(os.path.join(CURRENT_DIR, "source", "data", "fortune_cookies.txt"))
-    g_sentence = markov.generate(4)
-
-    # test if sentence is too long
-    while len(g_sentence) > 29:
         g_sentence = markov.generate(4)
+        # check if sentence is too long
+        while len(g_sentence) > 29:
+            g_sentence = markov.generate(4)
+    elif mode == button_logic.QUOTE:
+        #markov.train(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
+        g_sentence = pick_random_sentence(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
+    elif mode == button_logic.COOKIE:
+        #markov.train(os.path.join(CURRENT_DIR, "source", "data", "fortune_cookies.txt"))
+        g_sentence = pick_random_sentence(os.path.join(CURRENT_DIR, "source", "data", "fortune_cookies.txt"))
 
     # remove all special symbols
-    g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "")
+    g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "").replace("$", "")
     #g_sentence = g_sentence.replace(" ", r"\n")
 
     print "----> {}".format(g_sentence)
@@ -66,6 +72,11 @@ def generate_sentence(mode):
     return g_sentence
 
 def main():
+
+    # wait for the arduino to be ready
+    time.sleep(5)
+
+    print "rpi ready"
 
     # perform initial setup of display and GPIO
     button_logic.setup_gpio(change_state_pin, trigger_pin, yellow_led, blue_led, green_led)
