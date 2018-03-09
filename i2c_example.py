@@ -11,9 +11,8 @@ def write_number(value):
     return -1
 
 def write_string(value):
-    for c in str(value):
-        print c
-        bus.write_byte(ADDRESS, ord(c)) # send ASCII encoding
+    for char in str(value):
+        bus.write_byte(ADDRESS, ord(char)) # send ASCII encoding
     return -1
 
 def read_number():
