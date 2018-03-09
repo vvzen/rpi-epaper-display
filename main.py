@@ -37,7 +37,7 @@ def read_number():
 
 def pick_random_sentence(path):
     with open(path) as f:
-        lines = f.read().split_lines()
+        lines = f.read().splitlines()
     return random.choice(lines)
 
 def generate_sentence(mode):
@@ -74,7 +74,7 @@ def generate_sentence(mode):
 def main():
 
     # wait for the arduino to be ready
-    time.sleep(5)
+    time.sleep(10)
 
     print "rpi ready"
 
