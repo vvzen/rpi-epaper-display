@@ -49,7 +49,7 @@ def generate_sentence(mode):
 
     # generate sentence
     markov = Markov(order=2)
-    print mode
+    print "requested mode: {}".format(mode)
 
     if mode == button_logic.MARKOV:
         markov.train(os.path.join(CURRENT_DIR, "source", "data", "motivational_markov.txt"))
@@ -88,6 +88,7 @@ def main():
 
     # announce that we're ready
     GPIO.output(green_led, True)
+    button_logic.app_mode = button_logic.COOKIE
 
     # b = 0
     while True:
