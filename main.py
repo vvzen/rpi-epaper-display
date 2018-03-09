@@ -49,6 +49,7 @@ def generate_sentence(mode):
 
     # generate sentence
     markov = Markov(order=2)
+    print mode
 
     if mode == button_logic.MARKOV:
         markov.train(os.path.join(CURRENT_DIR, "source", "data", "motivational_markov.txt"))
