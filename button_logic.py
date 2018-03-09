@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 COOKIE = 0
 QUOTE = 1
 MARKOV = 2
-app_mode = QUOTE
+app_mode = COOKIE
 
 # setup gpio
 # @args:
@@ -31,16 +31,16 @@ def change_state(y_led, b_led, g_led):
         app_mode = 0
 
     if app_mode == COOKIE:
+        GPIO.output(g_led, True)
         GPIO.output(b_led, False)
-        GPIO.output(g_led, False)
-        GPIO.output(y_led, True)
+        GPIO.output(y_led, False)
     elif app_mode == QUOTE:
-        GPIO.output(b_led, True)
         GPIO.output(g_led, False)
+        GPIO.output(b_led, True)
         GPIO.output(y_led, False)	
     elif app_mode == MARKOV:
+        GPIO.output(g_led, False)
         GPIO.output(b_led, False)
-        GPIO.output(g_led, True)
-        GPIO.output(y_led, False) 
+        GPIO.output(y_led, True) 
 
-    print "Button pressed, app mode: {}".format(app_mode)
+    print "Button pressed, new app mode: {}".format(app_mode)
