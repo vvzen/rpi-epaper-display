@@ -23,7 +23,7 @@ def read_number():
 #     number = bus.read_byte(ADDRESS)
 #     return number
 
-def main()
+def main():
     b = 0
     while True:
         # var = input("Enter 1 - 9: ")
