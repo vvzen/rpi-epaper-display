@@ -37,8 +37,8 @@ def read_number():
 
 def pick_random_sentence(path):
     with open(path) as f:
-        lines = f.read()
-    return random.sample(lines, 1)[0]
+        lines = f.read().split_lines()
+    return random.choice(lines)
 
 def generate_sentence(mode):
     '''
