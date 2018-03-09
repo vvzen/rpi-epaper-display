@@ -54,14 +54,18 @@ def generate_sentence(mode):
         markov.train(os.path.join(CURRENT_DIR, "source", "data", "motivational_markov.txt"))
         g_sentence = markov.generate(4)
         # check if sentence is too long
-        while len(g_sentence) > 29:
+        while len(g_sentence) > 34:
             g_sentence = markov.generate(4)
     elif mode == button_logic.QUOTE:
         #markov.train(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
         g_sentence = pick_random_sentence(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
+        while len(g_sentence) > 34:
+            g_sentence = pick_random_sentence(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
     elif mode == button_logic.COOKIE:
         #markov.train(os.path.join(CURRENT_DIR, "source", "data", "fortune_cookies.txt"))
         g_sentence = pick_random_sentence(os.path.join(CURRENT_DIR, "source", "data", "fortune_cookies.txt"))
+        while len(g_sentence) > 34:
+            g_sentence = pick_random_sentence(os.path.join(CURRENT_DIR, "source", "data", "star_wars_quotes.txt"))
 
     # remove all special symbols
     g_sentence = g_sentence.replace("’", "'").replace("\n", " ").replace("”", "").replace("$", "")
