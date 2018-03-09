@@ -11,6 +11,9 @@ def write_number(value):
     return -1
 
 def write_string(value):
+    # as first byte, send the total length of the string
+    bus.write_byte(ADDRESS, len(str(value)))
+    # then send each char in the string
     for char in str(value):
         bus.write_byte(ADDRESS, ord(char)) # send ASCII encoding
     return -1
