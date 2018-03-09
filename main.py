@@ -63,9 +63,6 @@ def generate_sentence(mode):
 
     print "----> {}".format(g_sentence)
 
-    if DEBUG:
-        print "length of sentence: {}".format(len(g_sentence))
-
     return g_sentence
 
 def main():
